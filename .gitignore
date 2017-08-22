@@ -5,4 +5,3 @@
 datasets/
 quickshots/
 quickshots*/
-!datasets/download_dataset.sh

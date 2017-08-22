@@ -6,7 +6,7 @@ from .gen import defineG
 from .dis import defineD
 from keras.layers import Input
 from keras.optimizers import Adam
-from keras.models import Model
+from keras.models import Model, load_model
 import numpy as np
 import sys
 from ..utils.vis_utils import vis_grid
@@ -48,23 +48,23 @@ class CycleGAN(BaseModel):
         rec_B = gen_B(fake_A) # = gen_B(gen_A(real_B))
 
         if opt.idloss > 0:
-            G_trainner = Model([real_A, real_B], 
+            G_trainner = Model([real_A, real_B],
                      [dis_fake_B,   dis_fake_A,     rec_A,      rec_B,      fake_B,     fake_A])
-            
+
             G_trainner.compile(Adam(lr=opt.lr, beta_1=opt.beta1,),
                 loss=['MSE',        'MSE',          'MAE',      'MAE',      'MAE',      'MAE'],
                 loss_weights=[1,    1,              opt.lmbd,   opt.lmbd,   opt.idloss  ,opt.idloss])
         else:
-            G_trainner = Model([real_A, real_B], 
+            G_trainner = Model([real_A, real_B],
                      [dis_fake_B,   dis_fake_A,     rec_A,      rec_B,      ])
-            
+
             G_trainner.compile(Adam(lr=opt.lr, beta_1=opt.beta1,),
                 loss=['MSE',        'MSE',          'MAE',      'MAE',      ],
                 loss_weights=[1,    1,              opt.lmbd,   opt.lmbd,   ])
         # label:  0             0               real_A      real_B
 
 
-        # build for discriminators 
+        # build for discriminators
         real_A = Input(opt.shapeA)
         fake_A = Input(opt.shapeA)
         real_B = Input(opt.shapeB)
@@ -75,7 +75,7 @@ class CycleGAN(BaseModel):
         dis_real_B = dis_B(real_B)
         dis_fake_B = dis_B(fake_B)
 
-        D_trainner = Model([real_A, fake_A, real_B, fake_B], 
+        D_trainner = Model([real_A, fake_A, real_B, fake_B],
                 [dis_real_A, dis_fake_A, dis_real_B, dis_fake_B])
         D_trainner.compile(Adam(lr=opt.lr, beta_1=opt.beta1,), loss='MSE')
         # label: 0           0.9         0           0.9
@@ -94,7 +94,7 @@ class CycleGAN(BaseModel):
         if not os.path.exists(opt.pic_dir):
             os.mkdir(opt.pic_dir)
         bs = opt.batch_size
-        
+
         fake_A_pool = []
         fake_B_pool = []
 
@@ -136,7 +136,7 @@ class CycleGAN(BaseModel):
                     self.G_trainner.train_on_batch([real_A, real_B],
                         [zeros, zeros, real_A, real_B, ])
 
-            
+
             print('Generator Loss:')
             print('fake_B: {} rec_A: {} | fake_A: {} rec_B: {}'.\
                     format(G_loss_fake_B, G_loss_rec_A, G_loss_fake_A, G_loss_rec_B))
@@ -155,7 +155,7 @@ class CycleGAN(BaseModel):
             print("fake_A: {}".format(res.mean()))
 
             if iteration % opt.save_iter == 0:
-                imga = real_A 
+                imga = real_A
                 imga2b = self.AtoB.predict(imga)
                 imga2b2a = self.BtoA.predict(imga2b)
 
@@ -163,7 +163,7 @@ class CycleGAN(BaseModel):
                 imgb2a = self.BtoA.predict(imgb)
                 imgb2a2b = self.AtoB.predict(imgb2a)
 
-                vis_grid(np.concatenate([imga, imga2b, imga2b2a, imgb, imgb2a, imgb2a2b], 
+                vis_grid(np.concatenate([imga, imga2b, imga2b2a, imgb, imgb2a, imgb2a2b],
                                                                             axis=0),
                         (6, bs), os.path.join(opt.pic_dir, '{}.png'.format(iteration)) )
 
@@ -175,3 +175,20 @@ class CycleGAN(BaseModel):
             iteration += 1
             sys.stdout.flush()
 
+
+        def test(self, test_img):
+            opt = self.opt
+
+            bs = opt.batch_size
+
+            if opt.which_direction == 'BtoA':
+                model = load_model(os.path.join(opt.pic_dir, 'b2a.h5'))
+            else:
+                model = load_model(os.path.join(opt.pic_dir, 'a2b.h5'))
+
+            img_pred = model.predict(test_img)
+
+            rndm = np.random.randint(10e6, size=1)
+
+            vis_grid(np.concatenate([test_img, img_pred], axis=0),
+                    (2, bs), os.path.join(opt.pic_dir, '{}.png'.format(rndm)) )

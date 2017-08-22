@@ -3,7 +3,7 @@ import numpy as np
 from pprint import pprint
 
 class Option(object):
-    def __init__(self, 
+    def __init__(self,
         # from CycleGAN/options.lua
         # data
         DATA_ROOT = '',         ## path to images (should have subfolders 'train', 'val', etc)
@@ -20,12 +20,12 @@ class Option(object):
         ndf = 64,               ## #  of discrim filters in first conv layer
         lmbd = 10.0,
         idloss=1.0,
- 
+
         # optimizers
         lr = 0.0002,            ## initial learning rate for adam
         beta1 = 0.5,            ## momentum term of adam
 
-        # training parameters 
+        # training parameters
         batch_size = 1,          ## # images in batch
         niter = 100,            ## #  of iter at starting learning rate
         pool_size = 50,                ## the size of image buffer that stores previously generated images
@@ -45,12 +45,12 @@ class Option(object):
         name = '',              ## name of the experiment, should generally be passed on the command line
         which_direction = 'AtoB',    ## AtoB or BtoA
         phase = 'train',             ## train, val, test, etc
-        nThreads = 2,                ## # threads for loading data
+        nThreads = 8,                ## # threads for loading data
         save_epoch_freq = 1,         ## save a model every save_epoch_freq epochs (does not overwrite previously saved models)
         save_latest_freq = 5000,     ## save the latest model every latest_freq sgd iterations (overwrites the previous latest model)
         print_freq = 50,             ## print the debug information every print_freq iterations
         save_display_freq = 2500,    ## save the current display of results every save_display_freq_iterations
-        continue_train = 0,          ## if continue training, load the latest model: 1: true, 0: false
+        continue_train = 1,          ## if continue training, load the latest model: 1: true, 0: false
         serial_batches = 0,          ## if 1, takes images in order to make batches, otherwise takes them randomly
         checkpoints_dir = './checkpoints', ## models are saved here
         cudnn = 1,                         ## set to 0 to not use cudnn
@@ -68,4 +68,3 @@ class Option(object):
 
     def summary(self):
         pprint(self.__dict__)
-

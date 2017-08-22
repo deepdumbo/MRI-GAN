@@ -21,10 +21,10 @@ class ImageGenerator(object):
                     img = imread(os.path.join(self.root, np.random.choice(self.img_list)))
 
                     if self.resize: img = imresize(img, self.resize)
-                    if self.crop: 
+                    if self.crop:
                         left = np.random.randint(0, img.shape[0]-self.crop[0])
                         top  = np.random.randint(0, img.shape[1]-self.crop[1])
-                        img = img[left:left+self.crop[0], top:top+self.crop[1]] 
+                        img = img[left:left+self.crop[0], top:top+self.crop[1]]
                     if self.flip:
                         if np.random.random() > 0.5:
                             img = img[:, ::-1, :]
