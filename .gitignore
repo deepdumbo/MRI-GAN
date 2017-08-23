@@ -2,6 +2,10 @@
 *.swp
 *.log
 
-datasets/
-quickshots/
-quickshots*/
+CycleGAN-keras/datasets/
+CycleGAN-keras/quickshots/
+CycleGAN-keras/quickshots*/
+
+pix2pix-keras/data/
+pix2pix-keras/pix2pix_out
+pix2pix-keras/pix2pix_out/*
