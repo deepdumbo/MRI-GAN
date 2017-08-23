@@ -1,3 +1,4 @@
+.gitignore
 *.pyc
 *.swp
 *.log
@@ -6,6 +7,6 @@ CycleGAN-keras/datasets/
 CycleGAN-keras/quickshots/
 CycleGAN-keras/quickshots*/
 
-pix2pix-keras/data/
-pix2pix-keras/pix2pix_out
-pix2pix-keras/pix2pix_out/*
+DCGAN-keras/data/
+DCGAN-keras/pix2pix_out
+DCGAN-keras/pix2pix_out/*
