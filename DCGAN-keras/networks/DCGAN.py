@@ -26,19 +26,21 @@ def DCGAN(generator_model, discriminator_model, input_img_dim, patch_dim):
     # generated image model from the generator
     generated_image = generator_model(generator_input)
 
-    h, w = input_img_dim[1:]
-    ph, pw = patch_dim
+    h, w, d = input_img_dim[1:]
+    ph, pw, pd = patch_dim
 
     # chop the generated image into patches
-    list_row_idx = [(i * ph, (i + 1) * ph) for i in range(int(h / ph))]
-    list_col_idx = [(i * pw, (i + 1) * pw) for i in range(int(w / pw))]
+    list_row_idx = [(i * ph, (i + 1) * ph, (i + 2) * ph) for i in range(int(h / ph))]
+    list_col_idx = [(i * pw, (i + 1) * pw, (i + 2) * pw) for i in range(int(w / pw))]
+    list_dep_idx = [(i * pd, (i + 1) * pd, (i + 2) * pd) for i in range(int(d / pd))]
 
     list_gen_patch = []
     for row_idx in list_row_idx:
         for col_idx in list_col_idx:
-            x_patch = Lambda(lambda z: z[:, :, row_idx[0]:row_idx[1],
-                col_idx[0]:col_idx[1]], output_shape=input_img_dim)(generated_image)
-            list_gen_patch.append(x_patch)
+            for dep_idx in list_dep_idx:
+                x_patch = Lambda(lambda z: z[:, :, row_idx[0]:row_idx[1],
+                    col_idx[0]:col_idx[1], dep_idx[0]:dep_idx[1]], output_shape=input_img_dim)(generated_image)
+                list_gen_patch.append(x_patch)
 
     # measure loss from patches of the image (not the actual image)
     dcgan_output = discriminator_model(list_gen_patch)
