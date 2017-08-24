@@ -50,7 +50,7 @@ def PatchGanDiscriminator(output_img_dim, patch_dim, nb_patches):
     # CONV 1
     # Do first conv bc it is different from the rest
     # paper skips batch norm for first layer
-    disc_out = Convolution2D(nb_filter=64, kernel_size=(4,4,4), padding='same', strides=(stride,stride,stride), name='disc_conv_1')(input_layer)
+    disc_out = Conv3D(nb_filter=64, kernel_size=(4,4,4), padding='same', strides=(stride,stride,stride), name='disc_conv_1')(input_layer)
     disc_out = LeakyReLU(alpha=0.2)(disc_out)
 
     # CONV 2 - CONV N
@@ -58,7 +58,7 @@ def PatchGanDiscriminator(output_img_dim, patch_dim, nb_patches):
     for i, filter_size in enumerate(filters_list[1:]):
         name = 'disc_conv_{}'.format(i+2)
 
-        disc_out = Convolution2D(nb_filter=filter_size, kernel_size=(4,4,4), padding='same', strides=(stride,stride,stride), name=name)(disc_out)
+        disc_out = Conv3D(nb_filter=filter_size, kernel_size=(4,4,4), padding='same', strides=(stride,stride,stride), name=name)(disc_out)
         disc_out = BatchNormalization(name=name + '_bn', axis=axis)(disc_out)
         disc_out = LeakyReLU(alpha=0.2)(disc_out)
 
