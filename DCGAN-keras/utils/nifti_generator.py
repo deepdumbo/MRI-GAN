@@ -6,7 +6,7 @@ from keras.preprocessing.image import load_img, img_to_array
 def normalize(X):
     return X / 255.0
 
-def facades_generator(data_dir_name, data_type, im_width, batch_size=10):
+def nifti_generator(data_dir_name, data_type, img_size, batch_size=10):
     """
     Generates facades and target images
     X = decoded images

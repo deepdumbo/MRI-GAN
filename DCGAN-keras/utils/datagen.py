@@ -8,6 +8,10 @@ from keras.preprocessing.image import apply_transform, flip_axis
 from keras.preprocessing.image import transform_matrix_offset_center
 from keras.preprocessing.image import Iterator, load_img, img_to_array
 
+import nibabel as nib
+import cv2
+
+# input_size=(260,311,260)
 
 class MyDict(dict):
     """
@@ -29,12 +33,7 @@ class MyDict(dict):
 class TwoImageIterator(Iterator):
     """Class to iterate A and B images at the same time."""
 
-    def __init__(self, directory, a_dir_name='A', b_dir_name='B', load_to_memory=False,
-                 is_a_binary=False, is_b_binary=False, is_a_grayscale=False,
-                 is_b_grayscale=False, target_size=(256, 256), rotation_range=0.,
-                 height_shift_range=0., width_shift_range=0., zoom_range=0.,
-                 fill_mode='constant', cval=0., horizontal_flip=False,
-                 vertical_flip=False,  dim_ordering='th', N=-1,
+    def __init__(self, directory, a_dir_name='A', b_dir_name='B', dim_ordering='th', N=-1,
                  batch_size=32, shuffle=True, seed=None):
         """
         Iterate through two directories at the same time.
@@ -48,12 +47,6 @@ class TwoImageIterator(Iterator):
         images;
         - b_dir_name: name of directory under directory that contains the B
         images;
-        - load_to_memory: if true, loads the images to memory when creating the
-        iterator;
-        - is_a_binary: converts A images to binary images. Applies a threshold of 0.5.
-        - is_b_binary: converts B images to binary images. Applies a threshold of 0.5.
-        - is_a_grayscale: if True, A images will only have one channel.
-        - is_b_grayscale: if True, B images will only have one channel.
         - N: if -1 uses the entire dataset. Otherwise only uses a subset;
         - batch_size: the size of the batches to create;
         - shuffle: if True the order of the images in X will be shuffled;
@@ -86,34 +79,19 @@ class TwoImageIterator(Iterator):
 
         self.target_size = target_size
 
-        self.is_a_binary = is_a_binary
-        self.is_b_binary = is_b_binary
-        self.is_a_grayscale = is_a_grayscale
-        self.is_b_grayscale = is_b_grayscale
-
         self.image_shape_a = self._get_image_shape(self.is_a_grayscale)
         self.image_shape_b = self._get_image_shape(self.is_b_grayscale)
-
-        self.load_to_memory = load_to_memory
-        if self.load_to_memory:
-            self._load_imgs_to_memory()
 
         if self.dim_ordering in ('th', 'default'):
             self.channel_index = 1
             self.row_index = 2
             self.col_index = 3
+            self.depth_index = 4
         if dim_ordering == 'tf':
-            self.channel_index = 3
+            self.channel_index = 4
             self.row_index = 1
             self.col_index = 2
-
-        self.rotation_range = rotation_range
-        self.height_shift_range = height_shift_range
-        self.width_shift_range = width_shift_range
-        self.fill_mode = fill_mode
-        self.cval = cval
-        self.horizontal_flip = horizontal_flip
-        self.vertical_flip = vertical_flip
+            self.depth_index = 3
 
         if np.isscalar(zoom_range):
             self.zoom_range = [1 - zoom_range, 1 + zoom_range]
@@ -137,38 +115,20 @@ class TwoImageIterator(Iterator):
                 return (3,) + self.target_size
 
 
-    def _load_imgs_to_memory(self):
-        """Load images to memory."""
-        if not self.load_to_memory:
-            raise Exception('Can not load images to memory. Reason: load_to_memory = False')
-
-        self.a = np.zeros((self.N,) + self.image_shape_a)
-        self.b = np.zeros((self.N,) + self.image_shape_b)
-
-        for idx in range(self.N):
-            ai, bi = self._load_img_pair(idx, False)
-            self.a[idx] = ai
-            self.b[idx] = bi
-
 
     def _load_img_pair(self, idx, load_from_memory):
         """Get a pair of images with index idx."""
-        if load_from_memory:
-            a = self.a[idx]
-            b = self.b[idx]
-            return a, b
 
         fname = self.filenames[idx]
 
-        a = load_img(os.path.join(self.a_dir, fname),
-                     grayscale=self.is_a_grayscale,
-                     target_size=self.target_size)
-        b = load_img(os.path.join(self.b_dir, fname),
-                     grayscale=self.is_b_grayscale,
-                     target_size=self.target_size)
+        a = nib.load(os.path.join(self.a_dir, fname)).get_data()
+        b = nib.load(os.path.join(self.b_dir, fname)).get_data()
 
-        a = img_to_array(a, data_format="channels_first")
-        b = img_to_array(b, data_format="channels_first")
+        a_resize = cv2.resize(a, (256,256,256))
+        b_resize = cv2.resize(b, (256,256,256))
+
+        a = img_to_array(a_resize, data_format="channels_first")
+        b = img_to_array(b_resize, data_format="channels_first")
 
         return a, b
 

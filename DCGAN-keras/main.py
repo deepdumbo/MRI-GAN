@@ -13,7 +13,8 @@ from utils.datagen import TwoImageIterator, MyDict
 
 from keras.utils import generic_utils as keras_generic_utils
 
-WORKING_DIR = os.path.dirname(os.path.realpath(__file__))
+# WORKING_DIR = os.path.dirname(os.path.realpath(__file__))
+WORKING_DIR = '/host/hamlet/local_raid/data/brainhack/'
 DATASET = 'brain2D'
 
 import keras.backend as K
@@ -23,20 +24,20 @@ K.set_image_data_format('channels_first')
 # HYPER PARAMS
 # ---------------------------------------------
 # width, height of images to work with. Assumes images are square
-im_width = im_height = 256
+im_width = im_height = im_depth = 256
 
 # inpu/output channels in image
-input_channels = 3
-output_channels = 3
+input_channels = 1
+output_channels = 1
 
 # image dims
-input_img_dim = (input_channels, im_width, im_height)
-output_img_dim = (output_channels, im_width, im_height)
+input_img_dim = (input_channels, im_width, im_height, im_depth)
+output_img_dim = (output_channels, im_width, im_height, im_depth)
 
 # We're using PatchGAN setup, so we need the num of non-overlaping patches
 # this is how big we'll make the patches for the discriminator
 # for example. We can break up a 256x256 image in 16 patches of 64x64 each
-sub_patch_dim = (256, 256)
+sub_patch_dim = (256,256,256)
 nb_patch_patches, patch_gan_dim = patch_utils.num_patches(output_img_dim=output_img_dim, sub_patch_dim=sub_patch_dim)
 
 
@@ -96,9 +97,10 @@ discriminator_nn.compile(loss='binary_crossentropy', optimizer=opt_discriminator
 
 # ------------------------
 # RUN ACTUAL TRAINING
-batch_size = 5
-data_path = WORKING_DIR + '/data/' + DATASET
-nb_epoch = 400
+batch_size = 1
+# data_path = WORKING_DIR + '/data/' + DATASET
+data_path = WORKING_DIR + DATASET + '/HCPdataset/training/'
+nb_epoch = 50
 n_images_per_epoch = 100
 
 params = MyDict({
@@ -122,20 +124,10 @@ params = MyDict({
     'val_dir': 'validation',  # Directory inside base_dir that contains validation data
     'train_samples': -1,  # The number of training samples. Set -1 to be the same as training examples
     'val_samples': -1,  # The number of validation samples. Set -1 to be the same as validation examples
-    'load_to_memory': True,  # Whether to load the images into memory
     # Image
-    'a_ch': 3,  # Number of channels of images A
-    'b_ch': 3,  # Number of channels of images B
-    'is_a_binary': False,  # If A is binary, its values will be either 0 or 1
-    'is_b_binary': False,  # If B is binary, the last layer of the atob model is followed by a sigmoid
-    'is_a_grayscale': False,  # If A is grayscale, the image will only have one channel
-    'is_b_grayscale': False,  # If B is grayscale, the image will only have one channel
+    'a_ch': 1,  # Number of channels of images A
+    'b_ch': 1,  # Number of channels of images B
     'target_size': 256,  # The size of the images loaded by the iterator. DOES NOT CHANGE THE MODELS
-    'rotation_range': 0.,  # The range to rotate training images for dataset augmentation
-    'height_shift_range': 0.,  # Percentage of height of the image to translate for dataset augmentation
-    'width_shift_range': 0.,  # Percentage of width of the image to translate for dataset augmentation
-    'horizontal_flip': False,  # If true performs random horizontal flips on the train set
-    'vertical_flip': False,  # If true performs random vertical flips on the train set
     'zoom_range': 0.,  # Defines the range to scale the image for dataset augmentation
 })
 
@@ -153,27 +145,9 @@ for epoch in range(0, nb_epoch):
     # val_gen = facades_generator(data_dir_name=data_path, data_type='validation', im_width=im_width, batch_size=batch_size)
     ts = params.target_size
     train_dir = os.path.join(data_path, 'training')
-    tng_gen = TwoImageIterator(train_dir,  is_a_binary=params.is_a_binary,
-                                is_a_grayscale=params.is_a_grayscale,
-                                is_b_grayscale=params.is_b_grayscale,
-                                is_b_binary=params.is_b_binary,
-                                batch_size=params.batch_size,
-                                load_to_memory=params.load_to_memory,
-                                rotation_range=params.rotation_range,
-                                height_shift_range=params.height_shift_range,
-                                width_shift_range=params.height_shift_range,
-                                zoom_range=params.zoom_range,
-                                horizontal_flip=params.horizontal_flip,
-                                vertical_flip=params.vertical_flip,
-                                target_size=(ts, ts))
+    tng_gen = TwoImageIterator(train_dir, batch_size=params.batch_size, target_size=(ts,ts,ts))
     val_dir = os.path.join(data_path, 'validation')
-    val_gen = TwoImageIterator(val_dir,  is_a_binary=params.is_a_binary,
-                              is_b_binary=params.is_b_binary,
-                              is_a_grayscale=params.is_a_grayscale,
-                              is_b_grayscale=params.is_b_grayscale,
-                              batch_size=params.batch_size,
-                              load_to_memory=params.load_to_memory,
-                              target_size=(ts, ts))
+    val_gen = TwoImageIterator(val_dir, batch_size=params.batch_size, target_size=(ts,ts,ts))
 
     # go through 1... n_images_per_epoch (which will go through all buckets as well
     for mini_batch_i in range(0, n_images_per_epoch, params.batch_size):
