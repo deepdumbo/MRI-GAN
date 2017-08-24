@@ -124,7 +124,7 @@ def lambda_output(input_shape):
 
 
 def minb_disc(x):
-    diffs = K.expand_dims(x, 3) - K.expand_dims(K.permute_dimensions(x, [1, 2, 0]), 0)
+    diffs = K.expand_dims(x, 3) - K.expand_dims(K.permute_dimensions(x, [1, 2, 3, 0]), 0)
     abs_diffs = K.sum(K.abs(diffs), 2)
     x = K.sum(K.exp(-abs_diffs), 2)
 

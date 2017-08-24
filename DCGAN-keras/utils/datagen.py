@@ -103,9 +103,9 @@ class TwoImageIterator(Iterator):
     def _get_image_shape(self, is_grayscale):
         """Auxiliar method to get the image shape given the color mode."""
         if self.dim_ordering == 'tf':
-            return self.target_size + (3,)
+            return self.target_size + (1,)
         else:
-            return (3,) + self.target_size
+            return (1,) + self.target_size
 
 
 
