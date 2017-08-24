@@ -96,10 +96,6 @@ class TwoImageIterator(Iterator):
             self.col_index = 2
             self.depth_index = 3
 
-        if np.isscalar(zoom_range):
-            self.zoom_range = [1 - zoom_range, 1 + zoom_range]
-        elif len(zoom_range) == 2:
-            self.zoom_range = [zoom_range[0], zoom_range[1]]
 
         super(TwoImageIterator, self).__init__(len(self.filenames), batch_size,
                                                shuffle, seed)
