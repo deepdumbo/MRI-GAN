@@ -33,8 +33,8 @@ class MyDict(dict):
 class TwoImageIterator(Iterator):
     """Class to iterate A and B images at the same time."""
 
-    def __init__(self, directory, a_dir_name='A', b_dir_name='B', dim_ordering='th', N=-1,
-                 batch_size=32, target_size, shuffle=True, seed=None):
+    def __init__(self, directory, target_size, a_dir_name='A', b_dir_name='B', dim_ordering='th', N=-1,
+                 batch_size=32, shuffle=True, seed=None):
         """
         Iterate through two directories at the same time.
 
