@@ -1,5 +1,5 @@
-from keras.layers import Flatten, Dense, Input, Reshape, merge, Lambda
-from keras.layers.convolutional import Convolution3D
+from keras.layers import Flatten, Dense, Input, Reshape, merge, Lambda, concatenate
+from keras.layers.convolutional import Conv3D
 from keras.layers.normalization import BatchNormalization
 from keras.layers.advanced_activations import LeakyReLU
 from keras.models import Model
@@ -90,7 +90,7 @@ def generate_patch_gan_loss(last_disc_conv_layer, patch_dim, input_layer, nb_pat
 
     # merge layers if have multiple patches (aka perceptual loss)
     if len(x) > 1:
-        x = merge(x, mode="concat", name="merged_features")
+        x = concatenate(x, name="merged_features")
     else:
         x = x[0]
 
@@ -98,7 +98,7 @@ def generate_patch_gan_loss(last_disc_conv_layer, patch_dim, input_layer, nb_pat
     # mbd = mini batch discrimination
     # https://arxiv.org/pdf/1606.03498.pdf
     if len(x_mbd) > 1:
-        x_mbd = merge(x_mbd, mode="concat", name="merged_feature_mbd")
+        x_mbd = concatenate(x_mbd, name="merged_feature_mbd")
     else:
         x_mbd = x_mbd[0]
 
@@ -111,7 +111,7 @@ def generate_patch_gan_loss(last_disc_conv_layer, patch_dim, input_layer, nb_pat
     x_mbd = M(x_mbd)
     x_mbd = Reshape((num_kernels, dim_per_kernel))(x_mbd)
     x_mbd = MBD(x_mbd)
-    x = merge([x, x_mbd], mode='concat')
+    x = concatenate([x, x_mbd], mode='concat')
 
     x_out = Dense(2, activation="softmax", name="disc_output")(x)
 
