@@ -14,8 +14,8 @@ from utils.datagen import TwoImageIterator, MyDict
 from keras.utils import generic_utils as keras_generic_utils
 
 # WORKING_DIR = os.path.dirname(os.path.realpath(__file__))
-WORKING_DIR = '/host/hamlet/local_raid/data/brainhack/'
-DATASET = 'brain2D'
+WORKING_DIR = '/host/hamlet/local_raid/data/'
+DATASET = 'brainhack'
 
 import keras.backend as K
 K.set_image_data_format('channels_first')
