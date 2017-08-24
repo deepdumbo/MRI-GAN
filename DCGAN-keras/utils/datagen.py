@@ -9,7 +9,7 @@ from keras.preprocessing.image import transform_matrix_offset_center
 from keras.preprocessing.image import Iterator, load_img, img_to_array
 
 import nibabel as nib
-import cv2
+import skimage.transform as skt
 
 # input_size=(260,311,260)
 
@@ -117,8 +117,8 @@ class TwoImageIterator(Iterator):
         a = nib.load(os.path.join(self.a_dir, fname)).get_data()
         b = nib.load(os.path.join(self.b_dir, fname)).get_data()
 
-        a_resize = cv2.resize(a, (256,256,256))
-        b_resize = cv2.resize(b, (256,256,256))
+        a_resize = skt.resize(a, (256,256,256))
+        b_resize = skt.resize(b, (256,256,256))
 
         a = img_to_array(a_resize, data_format="channels_first")
         b = img_to_array(b_resize, data_format="channels_first")
