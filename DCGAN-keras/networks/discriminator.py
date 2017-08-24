@@ -111,7 +111,7 @@ def generate_patch_gan_loss(last_disc_conv_layer, patch_dim, input_layer, nb_pat
     x_mbd = M(x_mbd)
     x_mbd = Reshape((num_kernels, dim_per_kernel))(x_mbd)
     x_mbd = MBD(x_mbd)
-    x = concatenate([x, x_mbd], mode='concat')
+    x = concatenate([x, x_mbd])
 
     x_out = Dense(2, activation="softmax", name="disc_output")(x)
 
