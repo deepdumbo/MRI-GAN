@@ -109,7 +109,7 @@ class TwoImageIterator(Iterator):
 
 
 
-    def _load_img_pair(self, idx, load_from_memory):
+    def _load_img_pair(self, idx):
         """Get a pair of images with index idx."""
 
         fname = self.filenames[idx]
@@ -136,7 +136,7 @@ class TwoImageIterator(Iterator):
         batch_b = np.zeros((current_batch_size,) + self.image_shape_b)
 
         for i, j in enumerate(index_array):
-            a_img, b_img = self._load_img_pair(j, self.load_to_memory)
+            a_img, b_img = self._load_img_pair(j)
             # a = a_img.transpose(1,0,2)
             # b = b_img.transpose(1,0,2)
             # print a_img.shape, a.shape
