@@ -13,7 +13,7 @@ conda create -n pix2pix python=2.7
 source activate pix2pix
 
 # install requirements
-pip install -r requirements.txt
+conda env create -f environment.yml
 
 # start training
 THEANO_FLAGS='floatX=float32,device=cuda0' python main.py
