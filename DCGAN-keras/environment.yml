@@ -273,5 +273,4 @@ dependencies:
   - xlrd==1.0.0
   - xlsxwriter==0.9.6
   - xlwt==1.2.0
-prefix: /host/silius/local_raid/ravnoor/00_toolbox/anaconda2/envs/keras
 
