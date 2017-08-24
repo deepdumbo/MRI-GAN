@@ -34,7 +34,7 @@ class TwoImageIterator(Iterator):
     """Class to iterate A and B images at the same time."""
 
     def __init__(self, directory, target_size, a_dir_name='T1w', b_dir_name='T2w', dim_ordering='th', N=-1,
-                 batch_size=32, shuffle=True, seed=None):
+                 batch_size=32, shuffle=True, seed=None, is_a_grayscale=True, is_b_grayscale=True):
         """
         Iterate through two directories at the same time.
 
@@ -78,6 +78,9 @@ class TwoImageIterator(Iterator):
                             'Got {0}'.format(self.dim_ordering))
 
         self.target_size = target_size
+
+        self.is_a_grayscale = is_a_grayscale
+        self.is_b_grayscale = is_b_grayscale
 
         self.image_shape_a = self._get_image_shape(self.is_a_grayscale)
         self.image_shape_b = self._get_image_shape(self.is_b_grayscale)
