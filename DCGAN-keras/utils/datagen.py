@@ -117,8 +117,14 @@ class TwoImageIterator(Iterator):
         a = nib.load(os.path.join(self.a_dir, fname)).get_data()
         b = nib.load(os.path.join(self.b_dir, fname)).get_data()
 
+        a = a.astype(np.float64)
+        b = b.astype(np.float64)
+
         a_resize = skt.resize(a, (256,256,256))
         b_resize = skt.resize(b, (256,256,256))
+
+        a_resize = a_resize.astype(np.float32)
+        b_resize = a_resize.astype(np.float32)
 
         a = img_to_array(a_resize, data_format="channels_first")
         b = img_to_array(b_resize, data_format="channels_first")
