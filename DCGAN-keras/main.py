@@ -147,8 +147,8 @@ for epoch in range(0, nb_epoch):
     ts = params.target_size
     train_dir = os.path.join(data_path, 'training')
     tng_gen = TwoImageIterator(train_dir, batch_size=params.batch_size, target_size=(ts,ts,ts))
-    val_dir = os.path.join(data_path, 'validation')
-    val_gen = TwoImageIterator(val_dir, batch_size=params.batch_size, target_size=(ts,ts,ts))
+    # val_dir = os.path.join(data_path, 'validation')
+    # val_gen = TwoImageIterator(val_dir, batch_size=params.batch_size, target_size=(ts,ts,ts))
 
     # go through 1... n_images_per_epoch (which will go through all buckets as well
     for mini_batch_i in range(0, n_images_per_epoch, params.batch_size):
@@ -156,7 +156,7 @@ for epoch in range(0, nb_epoch):
         # load a batch of decoded and original images
         # both for training and validation
         X_train_decoded_imgs, X_train_original_imgs = next(tng_gen)
-        X_val_decoded_imgs, X_val_original_imgs = next(val_gen)
+        # X_val_decoded_imgs, X_val_original_imgs = next(val_gen)
 
         # generate a batch of data and feed to the discriminator
         # some images that come out of here are real and some are fake
@@ -212,8 +212,8 @@ for epoch in range(0, nb_epoch):
             logger.plot_generated_batch(X_train_original_imgs, X_train_decoded_imgs, generator_nn, epoch, 'tng', mini_batch_i)
 
             # print images for validation data
-            X_full_val_batch, X_sketch_val_batch = next(patch_utils.gen_batch(X_val_original_imgs, X_val_decoded_imgs, batch_size))
-            logger.plot_generated_batch(X_full_val_batch, X_sketch_val_batch, generator_nn, epoch, 'val', mini_batch_i)
+            # X_full_val_batch, X_sketch_val_batch = next(patch_utils.gen_batch(X_val_original_imgs, X_val_decoded_imgs, batch_size))
+            # logger.plot_generated_batch(X_full_val_batch, X_sketch_val_batch, generator_nn, epoch, 'val', mini_batch_i)
 
     # -----------------------
     # log epoch
