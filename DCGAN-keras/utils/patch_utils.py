@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def num_patches(output_img_dim=(3, 256, 256), sub_patch_dim=(64, 64)):
+def num_patches(output_img_dim=(1, 256, 256, 256), sub_patch_dim=(64, 64, 64)):
     """
     Creates non-overlaping patches to feed to the PATCH GAN
     (Section 2.2.2 in paper)
@@ -17,10 +17,10 @@ def num_patches(output_img_dim=(3, 256, 256), sub_patch_dim=(64, 64)):
     :return:
     """
     # num of non-overlaping patches
-    nb_non_overlaping_patches = (output_img_dim[1] / sub_patch_dim[0]) * (output_img_dim[2] / sub_patch_dim[1])
+    nb_non_overlaping_patches = (output_img_dim[1] / sub_patch_dim[0]) * (output_img_dim[2] / sub_patch_dim[1]) * (output_img_dim[3] / sub_patch_dim[2])
 
     # dimensions for the patch discriminator
-    patch_disc_img_dim = (output_img_dim[0], sub_patch_dim[0], sub_patch_dim[1])
+    patch_disc_img_dim = (output_img_dim[0], sub_patch_dim[0], sub_patch_dim[1], sub_patch_dim[2])
 
     return int(nb_non_overlaping_patches), patch_disc_img_dim
 
@@ -32,27 +32,30 @@ def extract_patches(images, sub_patch_dim):
     ex: input 3 images [im1, im2, im3]
     output [[im_1_patch_1, im_2_patch_1], ... , [im_n-1_patch_k, im_n_patch_k]]
 
-    :param images: array of Images (num_images, im_channels, im_height, im_width)
-    :param sub_patch_dim: (height, width) ex: (30, 30) Subpatch dimensions
+    :param images: array of Images (num_images, im_channels, im_height, im_width, im_depth)
+    :param sub_patch_dim: (height, width, depth) ex: (30, 30, 30) Subpatch dimensions
     :return:
     """
-    im_height, im_width = images.shape[2:]
-    patch_height, patch_width = sub_patch_dim
+    im_height, im_width, im_depth= images.shape[2:]
+    patch_height, patch_width, patch_depth = sub_patch_dim
 
     # list out all xs  ex: 0, 29, 58, ...
     x_spots = range(0, im_width, patch_width)
 
     # list out all ys ex: 0, 29, 58
     y_spots = range(0, im_height, patch_height)
+
+    z_spots = range(0, im_depth, patch_depth)
     all_patches = []
 
-    for y in y_spots:
-        for x in x_spots:
-            # indexing here is cra
-            # images[num_images, num_channels, width, height]
-            # this says, cut a patch across all images at the same time with this width, height
-            image_patches = images[:, :, y: y+patch_height, x: x+patch_width]
-            all_patches.append(np.asarray(image_patches, dtype=np.float32))
+    for z in z_spots:
+        for y in y_spots:
+            for x in x_spots:
+                # indexing here is cra
+                # images[num_images, num_channels, depth, width, height]
+                # this says, cut a patch across all images at the same time with this width, height
+                image_patches = images[:, :, y: y+patch_height, x: x+patch_width, z: z+patch_depth]
+                all_patches.append(np.asarray(image_patches, dtype=np.float32))
     return all_patches
 
 def get_disc_batch(X_original_batch, X_decoded_batch, generator_model, batch_counter, patch_dim,
@@ -69,7 +72,7 @@ def get_disc_batch(X_original_batch, X_decoded_batch, generator_model, batch_cou
         y_disc = np.zeros((X_disc.shape[0], 2), dtype=np.uint8)
 
         # sets all first entries to 1. AKA saying these are fake
-        # these are fake iamges
+        # these are fake images
         y_disc[:, 0] = 1
 
         if label_flipping > 0:

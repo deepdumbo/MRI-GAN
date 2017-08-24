@@ -41,6 +41,7 @@ sub_patch_dim = (256,256,256)
 nb_patch_patches, patch_gan_dim = patch_utils.num_patches(output_img_dim=output_img_dim, sub_patch_dim=sub_patch_dim)
 
 
+
 # ---------------------------------------------
 # TRAINING ROUTINE
 # ---------------------------------------------
