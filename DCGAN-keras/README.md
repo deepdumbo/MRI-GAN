@@ -16,5 +16,7 @@ source activate pix2pix
 conda env create -f environment.yml
 
 # start training
-KERAS_BACKEND=theano THEANO_FLAGS='floatX=float32,device=cuda0' python main.py
+KERAS_BACKEND=theano THEANO_FLAGS='floatX=float32,device=cuda0' python main.py # for nvidia GPU
+KERAS_BACKEND=theano THEANO_FLAGS='floatX=float32,device=cpu' python main.py # for CPU
+
 ```    
