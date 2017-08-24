@@ -16,5 +16,5 @@ source activate pix2pix
 pip install -r requirements.txt
 
 # start training
-THEANO_FLAGS='floatX=float32,device=cuda0' python main.py
+KERAS_BACKEND=theano THEANO_FLAGS='floatX=float32,device=cuda0' python main.py
 ```    
