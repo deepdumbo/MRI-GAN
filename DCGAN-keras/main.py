@@ -100,7 +100,7 @@ discriminator_nn.compile(loss='binary_crossentropy', optimizer=opt_discriminator
 # RUN ACTUAL TRAINING
 batch_size = 1
 # data_path = WORKING_DIR + '/data/' + DATASET
-data_path = WORKING_DIR + DATASET + '/HCPdataset/training/'
+data_path = WORKING_DIR + DATASET + '/HCPdataset/'
 nb_epoch = 50
 n_images_per_epoch = 100
 
