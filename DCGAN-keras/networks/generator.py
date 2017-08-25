@@ -111,12 +111,12 @@ def UNETGenerator(input_img_dim, num_output_channels):
     en_2 = LeakyReLU(alpha=0.2)(en_2)
 
     # 3 encoder C256
-    en_3 = Conv3D(filters=filter_sizes[2], kernel_size=(4,4,4), padding='same', strides=(stride,stride,stride))(en_2)
-    en_3 = BatchNormalization(name='gen_en_bn_3', axis=bn_axis)(en_3)
-    en_3 = LeakyReLU(alpha=0.2)(en_3)
+    # en_3 = Conv3D(filters=filter_sizes[2], kernel_size=(4,4,4), padding='same', strides=(stride,stride,stride))(en_2)
+    # en_3 = BatchNormalization(name='gen_en_bn_3', axis=bn_axis)(en_3)
+    # en_3 = LeakyReLU(alpha=0.2)(en_3)
 
     # 4 encoder C512
-    en_4 = Conv3D(filters=filter_sizes[3], kernel_size=(4,4,4), padding='same', strides=(stride,stride,stride))(en_3)
+    en_4 = Conv3D(filters=filter_sizes[3], kernel_size=(4,4,4), padding='same', strides=(stride,stride,stride))(en_2)
     en_4 = BatchNormalization(name='gen_en_bn_4', axis=bn_axis)(en_4)
     en_4 = LeakyReLU(alpha=0.2)(en_4)
 
@@ -186,16 +186,16 @@ def UNETGenerator(input_img_dim, num_output_channels):
     de_4 = Activation('relu')(de_4)
 
     # 5 decoder CD1024 (decodes en_4)
-    de_5 = UpSampling3D(size=(2,2,2))(de_4)
-    de_5 = Conv3D(filters=filter_sizes[4], kernel_size=(4,4,4), padding='same')(de_5)
-    de_5 = BatchNormalization(name='gen_de_bn_5', axis=bn_axis)(de_5)
-    de_5 = Dropout(rate=0.5)(de_5)
-    # de_5 = merge([de_5, en_3], mode=merge_mode, concat_axis=1)
-    de_5 = concatenate([de_5, en_3], axis=1)
-    de_5 = Activation('relu')(de_5)
+    # de_5 = UpSampling3D(size=(2,2,2))(de_4)
+    # de_5 = Conv3D(filters=filter_sizes[4], kernel_size=(4,4,4), padding='same')(de_5)
+    # de_5 = BatchNormalization(name='gen_de_bn_5', axis=bn_axis)(de_5)
+    # de_5 = Dropout(rate=0.5)(de_5)
+    # # de_5 = merge([de_5, en_3], mode=merge_mode, concat_axis=1)
+    # de_5 = concatenate([de_5, en_3], axis=1)
+    # de_5 = Activation('relu')(de_5)
 
     # 6 decoder C512 (decodes en_3)
-    de_6 = UpSampling3D(size=(2,2,2))(de_5)
+    de_6 = UpSampling3D(size=(2,2,2))(de_4)
     de_6 = Conv3D(filters=filter_sizes[5], kernel_size=(4,4,4), padding='same')(de_6)
     de_6 = BatchNormalization(name='gen_de_bn_6', axis=bn_axis)(de_6)
     de_6 = Dropout(rate=0.5)(de_6)
