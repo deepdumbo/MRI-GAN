@@ -131,8 +131,11 @@ class TwoImageIterator(Iterator):
         a_resize = a_resize.astype(np.float32)
         b_resize = a_resize.astype(np.float32)
 
-        a = img_to_array(a_resize, data_format="channels_first")
-        b = img_to_array(b_resize, data_format="channels_first")
+        # a = img_to_array(a_resize, data_format="channels_first")
+        # b = img_to_array(b_resize, data_format="channels_first")
+
+        a = np.expand_dims(a_resize, axis=0)
+        b = np.expand_dims(b_resize, axis=0)
 
         return a, b
 
