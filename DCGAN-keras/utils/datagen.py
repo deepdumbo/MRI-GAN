@@ -95,7 +95,6 @@ class TwoImageIterator(Iterator):
             self.col_index = 2
             self.depth_index = 3
 
-
         super(TwoImageIterator, self).__init__(len(self.filenames), batch_size,
                                                shuffle, seed)
 
@@ -107,6 +106,11 @@ class TwoImageIterator(Iterator):
             return (1,) + self.target_size
 
 
+    def normalize(input):
+        """Normalize inputs between -1 and +1"""
+        normd = 2*(input-input.min())/(input.max()-input.min())-1
+        return normd
+
 
     def _load_img_pair(self, idx):
         """Get a pair of images with index idx."""
@@ -116,14 +120,16 @@ class TwoImageIterator(Iterator):
         a = nib.load(os.path.join(self.a_dir, fname)).get_data()
         b = nib.load(os.path.join(self.b_dir, fname)).get_data()
 
-        a = a.astype(np.float64)
-        b = b.astype(np.float64)
+        # a = a.astype(np.float64)
+        # b = b.astype(np.float64)
+        a_norm = normalize(a)
+        b_norm = normalize(b)
 
-        a_resize = skt.resize(a, self.target_size)
-        b_resize = skt.resize(b, self.target_size)
+        a_resize = skt.resize(a, self.target_size, mode='constant')
+        b_resize = skt.resize(b, self.target_size, mode='constant')
 
-        a_resize = a_resize.astype(np.float32)
-        b_resize = a_resize.astype(np.float32)
+        # a_resize = a_resize.astype(np.float32)
+        # b_resize = a_resize.astype(np.float32)
 
         a = img_to_array(a_resize, data_format="channels_first")
         b = img_to_array(b_resize, data_format="channels_first")

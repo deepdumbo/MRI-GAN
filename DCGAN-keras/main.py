@@ -2,7 +2,6 @@ import numpy as np
 import os
 
 from keras.optimizers import Adam
-from utils.facades_generator import facades_generator
 from networks.generator import UNETGenerator
 from networks.discriminator import PatchGanDiscriminator
 from networks.DCGAN import DCGAN
@@ -37,7 +36,7 @@ output_img_dim = (output_channels, im_width, im_height, im_depth)
 # We're using PatchGAN setup, so we need the num of non-overlaping patches
 # this is how big we'll make the patches for the discriminator
 # for example. We can break up a 256x256 image in 16 patches of 64x64 each
-sub_patch_dim = (256/4,256/4,256/4)
+sub_patch_dim = (256,256,256)
 nb_patch_patches, patch_gan_dim = patch_utils.num_patches(output_img_dim=output_img_dim, sub_patch_dim=sub_patch_dim)
 
 
@@ -96,7 +95,6 @@ discriminator_nn.trainable = True
 discriminator_nn.compile(loss='binary_crossentropy', optimizer=opt_discriminator)
 
 
-
 params = MyDict({
     # Model
     'nfd': 16,  # Number of filters of the first layer of the discriminator
@@ -113,7 +111,6 @@ params = MyDict({
     # File system
     'log_dir': 'log',  # Directory to log
     'expt_name': 'test1',  # The name of the experiment. Saves the logs into a folder with this name
-    'base_dir': 'data/brain2D',  # Directory that contains the data
     'train_dir': 'training',  # Directory inside base_dir that contains training data
     'val_dir': 'validation',  # Directory inside base_dir that contains validation data
     'train_samples': -1,  # The number of training samples. Set -1 to be the same as training examples
