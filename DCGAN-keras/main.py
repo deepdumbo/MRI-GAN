@@ -111,7 +111,7 @@ params = MyDict({
     'alpha': 100,  # The weight of the reconstruction loss of the atob model
     # Train
     'epochs': 100,  # Number of epochs to train the model
-    'batch_size': 5,  # The batch size
+    'batch_size': 1,  # The batch size
     'samples_per_batch': 20,  # The number of samples to train each model on each iteration
     'save_every': 10,  # Save results every 'save_every' epochs on the log folder
     'lr': 2e-4,  # The learning rate to train the models
