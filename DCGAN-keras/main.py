@@ -183,7 +183,7 @@ for epoch in range(0, nb_epoch):
 
         # training GAN
         # print('calculating GAN loss...')
-        gen_loss = dc_gan_nn.train_on_batch(X_gen[:3], [X_gen_target[:3], y_gen])
+        gen_loss = dc_gan_nn.train_on_batch(X_gen, [X_gen_target, y_gen])
 
         # Unfreeze the discriminator
         discriminator_nn.trainable = True
