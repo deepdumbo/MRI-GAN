@@ -12,6 +12,11 @@ import skimage.transform as skt
 
 # input_size=(260,311,260)
 
+def normalize(input):
+    """Normalize inputs between -1 and +1"""
+    normd = 2*(input-input.min())/(input.max()-input.min())-1
+    return normd
+
 class MyDict(dict):
     """
     Dictionary that allows to access elements with dot notation.
@@ -104,12 +109,6 @@ class TwoImageIterator(Iterator):
             return self.target_size + (1,)
         else:
             return (1,) + self.target_size
-
-
-    def normalize(input):
-        """Normalize inputs between -1 and +1"""
-        normd = 2*(input-input.min())/(input.max()-input.min())-1
-        return normd
 
 
     def _load_img_pair(self, idx):
