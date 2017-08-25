@@ -23,7 +23,7 @@ K.set_image_data_format('channels_first')
 # HYPER PARAMS
 # ---------------------------------------------
 # width, height of images to work with. Assumes images are square
-im_width = im_height = im_depth = 256
+im_width = im_height = im_depth = 256/2
 
 # inpu/output channels in image
 input_channels = 1
@@ -36,7 +36,7 @@ output_img_dim = (output_channels, im_width, im_height, im_depth)
 # We're using PatchGAN setup, so we need the num of non-overlaping patches
 # this is how big we'll make the patches for the discriminator
 # for example. We can break up a 256x256 image in 16 patches of 64x64 each
-sub_patch_dim = (256,256,256)
+sub_patch_dim = (256/2,256/2,256/2)
 nb_patch_patches, patch_gan_dim = patch_utils.num_patches(output_img_dim=output_img_dim, sub_patch_dim=sub_patch_dim)
 
 
@@ -117,7 +117,7 @@ params = MyDict({
     'train_samples': -1,  # The number of training samples. Set -1 to be the same as training examples
     'val_samples': -1,  # The number of validation samples. Set -1 to be the same as validation examples
     # Image
-    'target_size': 256,  # The size of the images loaded by the iterator. DOES NOT CHANGE THE MODELS
+    'target_size': 256/2,  # The size of the images loaded by the iterator. DOES NOT CHANGE THE MODELS
 
 })
 
@@ -127,7 +127,7 @@ batch_size = params.batch_size
 # data_path = WORKING_DIR + '/data/' + DATASET
 data_path = WORKING_DIR + DATASET + '/HCPdataset/'
 nb_epoch = 50
-n_images_per_epoch = 100
+n_images_per_epoch = 10
 
 
 print('Training starting...')
