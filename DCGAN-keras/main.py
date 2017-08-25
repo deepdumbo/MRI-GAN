@@ -1,7 +1,7 @@
 import numpy as np
 import os
 
-from keras.optimizers import Adam
+from keras.optimizers import Adam, SGD
 from networks.generator import UNETGenerator
 from networks.discriminator import PatchGanDiscriminator
 from networks.DCGAN import DCGAN
@@ -65,7 +65,8 @@ discriminator_nn.trainable = False
 
 # ------------------------
 # Define Optimizers
-opt_discriminator = Adam(lr=1E-4, beta_1=0.9, beta_2=0.999, epsilon=1e-08)
+# opt_discriminator = Adam(lr=1E-4, beta_1=0.9, beta_2=0.999, epsilon=1e-08)
+opt_discriminator = SGD(lr=0.01, momentum=0.0, decay=0.0, nesterov=False)
 opt_dcgan = Adam(lr=1E-4, beta_1=0.9, beta_2=0.999, epsilon=1e-08)
 
 # -------------------------
@@ -182,7 +183,7 @@ for epoch in range(0, nb_epoch):
 
         # training GAN
         # print('calculating GAN loss...')
-        gen_loss = dc_gan_nn.train_on_batch(X_gen, [X_gen_target, y_gen])
+        gen_loss = dc_gan_nn.train_on_batch(X_gen[:3], [X_gen_target[:3], y_gen])
 
         # Unfreeze the discriminator
         discriminator_nn.trainable = True
