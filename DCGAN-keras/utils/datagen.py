@@ -4,9 +4,8 @@ import random
 
 import numpy as np
 
-from keras.preprocessing.image import apply_transform, flip_axis
 from keras.preprocessing.image import transform_matrix_offset_center
-from keras.preprocessing.image import Iterator, load_img, img_to_array
+from keras.preprocessing.image import Iterator, img_to_array
 
 import nibabel as nib
 import skimage.transform as skt
@@ -120,8 +119,8 @@ class TwoImageIterator(Iterator):
         a = a.astype(np.float64)
         b = b.astype(np.float64)
 
-        a_resize = skt.resize(a, (256,256,256))
-        b_resize = skt.resize(b, (256,256,256))
+        a_resize = skt.resize(a, self.target_size)
+        b_resize = skt.resize(b, self.target_size)
 
         a_resize = a_resize.astype(np.float32)
         b_resize = a_resize.astype(np.float32)

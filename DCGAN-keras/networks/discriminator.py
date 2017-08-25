@@ -43,14 +43,15 @@ def PatchGanDiscriminator(output_img_dim, patch_dim, nb_patches):
 
     # We have to build the discriminator dinamically because
     # the size of the disc patches is dynamic
-    num_filters_start = 64
+    num_filters_start = 32 # 64
     nb_conv = int(np.floor(np.log(output_img_dim[1]) / np.log(2)))
     filters_list = [num_filters_start * min(8, (2 ** i)) for i in range(nb_conv)]
 
     # CONV 1
     # Do first conv bc it is different from the rest
     # paper skips batch norm for first layer
-    disc_out = Conv3D(nb_filter=64, kernel_size=(4,4,4), padding='same', strides=(stride,stride,stride), name='disc_conv_1')(input_layer)
+    disc_out = Conv3D(filters=32, kernel_size=(4,4,4), padding='same', strides=(stride,stride,stride), name='disc_conv_1')(input_layer)
+    # disc_out = Conv3D(filters=64, kernel_size=(4,4,4), padding='same', strides=(stride,stride,stride), name='disc_conv_1')(input_layer)
     disc_out = LeakyReLU(alpha=0.2)(disc_out)
 
     # CONV 2 - CONV N
@@ -58,7 +59,7 @@ def PatchGanDiscriminator(output_img_dim, patch_dim, nb_patches):
     for i, filter_size in enumerate(filters_list[1:]):
         name = 'disc_conv_{}'.format(i+2)
 
-        disc_out = Conv3D(nb_filter=filter_size, kernel_size=(4,4,4), padding='same', strides=(stride,stride,stride), name=name)(disc_out)
+        disc_out = Conv3D(filters=filter_size, kernel_size=(4,4,4), padding='same', strides=(stride,stride,stride), name=name)(disc_out)
         disc_out = BatchNormalization(name=name + '_bn', axis=axis)(disc_out)
         disc_out = LeakyReLU(alpha=0.2)(disc_out)
 
@@ -82,7 +83,7 @@ def generate_patch_gan_loss(last_disc_conv_layer, patch_dim, input_layer, nb_pat
     x_flat = Flatten()(last_disc_conv_layer)
     x = Dense(2, activation='softmax', name="disc_dense")(x_flat)
 
-    patch_gan = Model(input=[input_layer], output=[x, x_flat], name="patch_gan")
+    patch_gan = Model(inputs=[input_layer], outputs=[x, x_flat], name="patch_gan")
 
     # generate individual losses for each patch
     x = [patch_gan(patch)[0] for patch in list_input]
@@ -115,7 +116,7 @@ def generate_patch_gan_loss(last_disc_conv_layer, patch_dim, input_layer, nb_pat
 
     x_out = Dense(2, activation="softmax", name="disc_output")(x)
 
-    discriminator = Model(input=list_input, output=[x_out], name='discriminator_nn')
+    discriminator = Model(inputs=list_input, outputs=[x_out], name='discriminator_nn')
     return discriminator
 
 

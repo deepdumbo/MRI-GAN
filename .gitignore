@@ -3,6 +3,8 @@
 *.swp
 *.log
 
+.DS_Store
+
 CycleGAN-keras/datasets/
 CycleGAN-keras/quickshots/
 CycleGAN-keras/quickshots*/

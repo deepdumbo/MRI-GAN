@@ -37,9 +37,8 @@ output_img_dim = (output_channels, im_width, im_height, im_depth)
 # We're using PatchGAN setup, so we need the num of non-overlaping patches
 # this is how big we'll make the patches for the discriminator
 # for example. We can break up a 256x256 image in 16 patches of 64x64 each
-sub_patch_dim = (256,256,256)
+sub_patch_dim = (256/4,256/4,256/4)
 nb_patch_patches, patch_gan_dim = patch_utils.num_patches(output_img_dim=output_img_dim, sub_patch_dim=sub_patch_dim)
-
 
 
 # ---------------------------------------------
@@ -96,18 +95,12 @@ dc_gan_nn.compile(loss=loss, loss_weights=loss_weights, optimizer=opt_dcgan)
 discriminator_nn.trainable = True
 discriminator_nn.compile(loss='binary_crossentropy', optimizer=opt_discriminator)
 
-# ------------------------
-# RUN ACTUAL TRAINING
-batch_size = 1
-# data_path = WORKING_DIR + '/data/' + DATASET
-data_path = WORKING_DIR + DATASET + '/HCPdataset/'
-nb_epoch = 50
-n_images_per_epoch = 100
+
 
 params = MyDict({
     # Model
-    'nfd': 32,  # Number of filters of the first layer of the discriminator
-    'nfatob': 64,  # Number of filters of the first layer of the AtoB model
+    'nfd': 16,  # Number of filters of the first layer of the discriminator
+    'nfatob': 32,  # Number of filters of the first layer of the AtoB model
     'alpha': 100,  # The weight of the reconstruction loss of the atob model
     # Train
     'epochs': 100,  # Number of epochs to train the model
@@ -126,11 +119,17 @@ params = MyDict({
     'train_samples': -1,  # The number of training samples. Set -1 to be the same as training examples
     'val_samples': -1,  # The number of validation samples. Set -1 to be the same as validation examples
     # Image
-    'a_ch': 1,  # Number of channels of images A
-    'b_ch': 1,  # Number of channels of images B
     'target_size': 256,  # The size of the images loaded by the iterator. DOES NOT CHANGE THE MODELS
-    'zoom_range': 0.,  # Defines the range to scale the image for dataset augmentation
+
 })
+
+# ------------------------
+# RUN ACTUAL TRAINING
+batch_size = params.batch_size
+# data_path = WORKING_DIR + '/data/' + DATASET
+data_path = WORKING_DIR + DATASET + '/HCPdataset/'
+nb_epoch = 50
+n_images_per_epoch = 100
 
 
 print('Training starting...')
