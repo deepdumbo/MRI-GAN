@@ -218,7 +218,7 @@ for epoch in range(0, nb_epoch):
 
     # -----------------------
     # log epoch
-    print("")
+    # print("")
     print('Epoch %s/%s, Time: %s' % (epoch + 1, nb_epoch, time.time() - start))
 
     # ------------------------------
