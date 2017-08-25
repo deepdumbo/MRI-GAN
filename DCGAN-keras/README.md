@@ -7,11 +7,7 @@ Paper Authors and Researchers: Phillip Isola, Jun-Yan Zhu, Tinghui Zhou, Alexei 
 ### To run    
 ```bash
 
-
 # setup conda(or virtual env)
-conda create -n pix2pix python=2.7  
-source activate pix2pix
-
 # install requirements
 conda env create -f environment.yml
 
