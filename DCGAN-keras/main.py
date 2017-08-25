@@ -207,7 +207,7 @@ for epoch in range(0, nb_epoch):
 
         # ---------------------------
         # Save images for visualization every 2nd batch
-        if batch_counter % 2 == 0:
+        # if batch_counter % 2 == 0:
 
             # print images for training data progress
             # logger.plot_generated_batch(X_train_original_imgs, X_train_decoded_imgs, generator_nn, epoch, 'tng', mini_batch_i)
@@ -218,7 +218,7 @@ for epoch in range(0, nb_epoch):
 
     # -----------------------
     # log epoch
-    # print("")
+    print("")
     print('Epoch %s/%s, Time: %s' % (epoch + 1, nb_epoch, time.time() - start))
 
     # ------------------------------
