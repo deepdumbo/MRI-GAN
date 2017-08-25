@@ -106,7 +106,7 @@ def generate_patch_gan_loss(last_disc_conv_layer, patch_dim, input_layer, nb_pat
     num_kernels = 100
     dim_per_kernel = 5
 
-    M = Dense(num_kernels * dim_per_kernel, bias=False, activation=None)
+    M = Dense(num_kernels * dim_per_kernel, use_bias=False, activation=None)
     MBD = Lambda(minb_disc, output_shape=lambda_output)
 
     x_mbd = M(x_mbd)
