@@ -160,5 +160,4 @@ class TwoImageIterator(Iterator):
             print a_img.shape
             print b_img.shape
 
-
         return [batch_a, batch_b]

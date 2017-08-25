@@ -170,6 +170,9 @@ for epoch in range(0, nb_epoch):
 
         # create a batch to feed the generator
         X_gen_target, X_gen = next(patch_utils.gen_batch(X_train_original_imgs, X_train_decoded_imgs, batch_size))
+        print('X_gen')
+        print X_gen.shape
+        print X_gen_target.shape
         y_gen = np.zeros((X_gen.shape[0], 2), dtype=np.uint8)
         y_gen[:, 1] = 1
 
