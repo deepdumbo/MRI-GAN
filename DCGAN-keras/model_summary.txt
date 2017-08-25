@@ -147,8 +147,7 @@ Total params: 120,750,433
 Trainable params: 120,742,113
 Non-trainable params: 8,320
 ____________________________________________________________________________________________________
-/local_raid/data/brainhack/code/DCGAN-keras/networks/discriminator.py:109: UserWarning: Update your `Dense` call to the Keras 2 API: `Dense(500, activation=None, use_bias=False)`
-  M = Dense(num_kernels * dim_per_kernel, bias=False, activation=None)
+
 ____________________________________________________________________________________________________
 Layer (type)                     Output Shape          Param #     Connected to
 ====================================================================================================
