@@ -43,7 +43,8 @@ def make_generator_ae(input_layer, num_output_filters):
     # -------------------------------
     stride = 2
     # filter_sizes = [512, 512, 512, 512, 512, 256, 128, 64]
-    filter_sizes = [256, 256, 256, 256, 256, 128, 64, 32]
+    # filter_sizes = [256, 256, 256, 256, 256, 128, 64, 32]
+    filter_sizes = [256/4, 256/4, 256/4, 256/4, 256/4, 128/4, 64/4, 32/4]
 
     decoder = encoder
     for filter_size in filter_sizes:
@@ -94,7 +95,8 @@ def UNETGenerator(input_img_dim, num_output_channels):
     bn_axis = 1
 
     # filter_sizes = [32*2, 64*2, 128*2, 256*2, 256*2, 256*2, 256*2, 256*2]
-    filter_sizes = [32, 64, 128, 256, 256, 256, 256, 256]
+    # filter_sizes = [32, 64, 128, 256, 256, 256, 256, 256]
+    filter_sizes = [32/4, 64/4, 128/4, 256/4, 256/4, 256/4, 256/4, 256/4]
 
     input_layer = Input(shape=input_img_dim, name="unet_input")
 
@@ -142,7 +144,8 @@ def UNETGenerator(input_img_dim, num_output_channels):
     # DECODER
     # CD512-CD1024-CD1024-C1024-C1024-C512-C256-C128
     # filter_sizes = [256*2, 512*2, 512*2, 512*2, 512*2, 256*2, 128*2]
-    filter_sizes = [256, 512, 512, 512, 512, 256, 128]
+    # filter_sizes = [256, 512, 512, 512, 512, 256, 128]
+    filter_sizes = [256/4, 512/4, 512/4, 512/4, 512/4, 256/4, 128/4]
     # 1 layer block = Conv - Upsample - BN - DO - Relu
     # also adds skip connections (merge). Takes input from previous layer matching encoder layer
     # -------------------------------
