@@ -127,7 +127,7 @@ batch_size = params.batch_size
 # data_path = WORKING_DIR + '/data/' + DATASET
 data_path = WORKING_DIR + DATASET + '/HCPdataset/'
 nb_epoch = 50
-n_images_per_epoch = 10
+n_images_per_epoch = 100
 
 
 print('Training starting...')
@@ -210,7 +210,7 @@ for epoch in range(0, nb_epoch):
         if batch_counter % 2 == 0:
 
             # print images for training data progress
-            logger.plot_generated_batch(X_train_original_imgs, X_train_decoded_imgs, generator_nn, epoch, 'tng', mini_batch_i)
+            # logger.plot_generated_batch(X_train_original_imgs, X_train_decoded_imgs, generator_nn, epoch, 'tng', mini_batch_i)
 
             # print images for validation data
             # X_full_val_batch, X_sketch_val_batch = next(patch_utils.gen_batch(X_val_original_imgs, X_val_decoded_imgs, batch_size))
