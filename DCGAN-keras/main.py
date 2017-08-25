@@ -175,6 +175,7 @@ for epoch in range(0, nb_epoch):
         print X_gen_target.shape
         y_gen = np.zeros((X_gen.shape[0], 2), dtype=np.uint8)
         y_gen[:, 1] = 1
+        print y_gen.shape
 
         # Freeze the discriminator
         discriminator_nn.trainable = False
