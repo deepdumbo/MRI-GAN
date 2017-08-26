@@ -7,7 +7,7 @@ Paper Authors and Researchers: Phillip Isola, Jun-Yan Zhu, Tinghui Zhou, Alexei 
 ### To run    
 ```bash
 
-# setup conda(or virtual env)
+# setup conda
 # install requirements
 conda env create -f environment.yml
 

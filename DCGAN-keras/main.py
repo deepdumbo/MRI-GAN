@@ -126,8 +126,8 @@ params = MyDict({
 batch_size = params.batch_size
 # data_path = WORKING_DIR + '/data/' + DATASET
 data_path = WORKING_DIR + DATASET + '/HCPdataset/'
-nb_epoch = 50
-n_images_per_epoch = 100
+nb_epoch = 100
+n_images_per_epoch = 200
 
 
 print('Training starting...')
@@ -171,12 +171,11 @@ for epoch in range(0, nb_epoch):
 
         # create a batch to feed the generator
         X_gen_target, X_gen = next(patch_utils.gen_batch(X_train_original_imgs, X_train_decoded_imgs, batch_size))
-        print('X_gen')
-        print X_gen.shape
-        print X_gen_target.shape
+        # print('X_gen')
+        # print X_gen.shape
+        # print X_gen_target.shape
         y_gen = np.zeros((X_gen.shape[0], 2), dtype=np.uint8)
         y_gen[:, 1] = 1
-        print y_gen.shape
 
         # Freeze the discriminator
         discriminator_nn.trainable = False
@@ -207,10 +206,12 @@ for epoch in range(0, nb_epoch):
 
         # ---------------------------
         # Save images for visualization every 2nd batch
-        # if batch_counter % 2 == 0:
+        # print X_train_original_imgs.shape, X_train_decoded_imgs.shape
+
+        if batch_counter % 5 == 0:
 
             # print images for training data progress
-            # logger.plot_generated_batch(X_train_original_imgs, X_train_decoded_imgs, generator_nn, epoch, 'tng', mini_batch_i)
+            logger.plot_generated_batch(X_train_original_imgs, X_train_decoded_imgs, generator_nn, epoch, 'tng', mini_batch_i)
 
             # print images for validation data
             # X_full_val_batch, X_sketch_val_batch = next(patch_utils.gen_batch(X_val_original_imgs, X_val_decoded_imgs, batch_size))
@@ -223,7 +224,7 @@ for epoch in range(0, nb_epoch):
 
     # ------------------------------
     # save weights on every 2nd epoch
-    if epoch % 2 == 0:
+    if epoch % 5 == 0:
         gen_weights_path = os.path.join('./pix2pix_out/weights/gen_weights_epoch_%s.h5' % (epoch))
         generator_nn.save_weights(gen_weights_path, overwrite=True)
 
