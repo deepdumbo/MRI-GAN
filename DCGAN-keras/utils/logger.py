@@ -4,6 +4,21 @@ import numpy as np
 def inverse_normalization(X):
     return X * 255.0
 
+def morph_images(X, target_size):
+
+    # limit to 8 images as output
+    Xs = X_sketch[:8]
+    Xg = X_gen[:8]
+    Xr = X_full[:8]
+    # zoom by 2x
+
+    # rotate by 90 deg
+    Xsr = skt.resize(Xs[0,:,:,64], target_size, mode='constant')
+    Xgr = skt.resize(Xg[0,:,:,64], target_size, mode='constant')
+    Xrr = skt.resize(Xg[0,:,:,64], target_size, mode='constant')
+    
+    return X
+
 def plot_generated_batch(X_full, X_sketch, generator_model, epoch_num, dataset_name, batch_num):
 
     # Generate images

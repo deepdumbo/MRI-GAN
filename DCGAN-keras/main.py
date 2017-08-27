@@ -65,8 +65,8 @@ discriminator_nn.trainable = False
 
 # ------------------------
 # Define Optimizers
-# opt_discriminator = Adam(lr=1E-4, beta_1=0.9, beta_2=0.999, epsilon=1e-08)
-opt_discriminator = SGD(lr=0.01, momentum=0.0, decay=0.0, nesterov=False)
+opt_discriminator = Adam(lr=1E-4, beta_1=0.9, beta_2=0.999, epsilon=1e-08)
+# opt_discriminator = SGD(lr=0.01, momentum=0.0, decay=0.0, nesterov=False)
 opt_dcgan = Adam(lr=1E-4, beta_1=0.9, beta_2=0.999, epsilon=1e-08)
 
 # -------------------------
@@ -208,7 +208,7 @@ for epoch in range(0, nb_epoch):
         # Save images for visualization every 2nd batch
         # print X_train_original_imgs.shape, X_train_decoded_imgs.shape
 
-        if batch_counter % 5 == 0:
+        if batch_counter % 20 == 0:
 
             # print images for training data progress
             logger.plot_generated_batch(X_train_original_imgs, X_train_decoded_imgs, generator_nn, epoch, 'tng', mini_batch_i)
@@ -224,7 +224,7 @@ for epoch in range(0, nb_epoch):
 
     # ------------------------------
     # save weights on every 2nd epoch
-    if epoch % 5 == 0:
+    if epoch % 20 == 0:
         gen_weights_path = os.path.join('./pix2pix_out/weights/gen_weights_epoch_%s.h5' % (epoch))
         generator_nn.save_weights(gen_weights_path, overwrite=True)
 

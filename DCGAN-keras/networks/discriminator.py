@@ -43,14 +43,14 @@ def PatchGanDiscriminator(output_img_dim, patch_dim, nb_patches):
 
     # We have to build the discriminator dinamically because
     # the size of the disc patches is dynamic
-    num_filters_start = 32/2 # 64
+    num_filters_start = 32 # 64
     nb_conv = int(np.floor(np.log(output_img_dim[1]) / np.log(2))) # outputs 8 for num_filters_start=32
     filters_list = [num_filters_start * min(8, (2 ** i)) for i in range(nb_conv-2)]
 
     # CONV 1
     # Do first conv bc it is different from the rest
     # paper skips batch norm for first layer
-    disc_out = Conv3D(filters=32/2, kernel_size=(4,4,4), padding='same', strides=(stride,stride,stride), name='disc_conv_1')(input_layer)
+    disc_out = Conv3D(filters=32, kernel_size=(4,4,4), padding='same', strides=(stride,stride,stride), name='disc_conv_1')(input_layer)
     # disc_out = Conv3D(filters=64, kernel_size=(4,4,4), padding='same', strides=(stride,stride,stride), name='disc_conv_1')(input_layer)
     disc_out = LeakyReLU(alpha=0.2)(disc_out)
 
@@ -103,7 +103,7 @@ def generate_patch_gan_loss(last_disc_conv_layer, patch_dim, input_layer, nb_pat
     else:
         x_mbd = x_mbd[0]
 
-    num_kernels = 10
+    num_kernels = 50
     dim_per_kernel = 5
     # num_kernels = 100
     # dim_per_kernel = 5
