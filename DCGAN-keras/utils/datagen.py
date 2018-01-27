@@ -4,8 +4,8 @@ import random
 
 import numpy as np
 
-from keras.preprocessing.image import transform_matrix_offset_center
-from keras.preprocessing.image import Iterator, img_to_array
+# from keras.preprocessing.image import transform_matrix_offset_center, img_to_array
+from keras.preprocessing.image import Iterator
 
 import nibabel as nib
 import skimage.transform as skt
